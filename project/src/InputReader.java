@@ -14,7 +14,7 @@ public class InputReader {
         String filePath;
 
         do {
-            System.out.println("Please enter a valid filepath:");
+            System.out.println("Please enter a valid input filepath:");
             filePath = sc.nextLine();
         } while (!validateFilePath(filePath));
 
