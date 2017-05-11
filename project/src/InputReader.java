@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -18,17 +20,30 @@ public class InputReader {
             filePath = sc.nextLine();
         } while (!validateFilePath(filePath));
 
-        return readBytes(filePath);
+        return readString(filePath);
 
 
     }
 
     private boolean validateFilePath(String filePath) {
-        return true;
+        return new File(filePath).exists();
     }
 
-    private String readBytes(String filePath) {
-        return "";
+    private String readString(String filePath){
+
+        StringBuilder builder = new StringBuilder();
+
+        try {
+            Scanner scanner = new Scanner(new File(filePath));
+
+            while(scanner.hasNext()) {
+                builder.append(scanner.next());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return builder.toString();
     }
 
 }

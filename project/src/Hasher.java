@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Created by iassona on 5/5/2017.
  */
@@ -6,6 +8,8 @@ public class Hasher {
     byte[] padded;
 
     byte[] internalState = new byte[64];
+
+    byte[][] roundConst; //This is where the round constants get initialized to.
 
     public Hasher() {
 
@@ -28,8 +32,54 @@ public class Hasher {
     }
 
     private byte[] wordByWordAddition(byte[] state, byte[] functionOutput) {
-        
+
+        byte[] output = new byte[64];
+
+        for (int i = 0; i < 8; i++) {
+            byte[] stateWord = Arrays.copyOfRange(state, 8 * i, 8 * (i + 1));
+            byte[] functionOutputWord = Arrays.copyOfRange(state, 8 * i, 8 * (i + 1));
+
+            byte[] addedWord = wordAdd(stateWord, functionOutputWord);
+
+            for (int j = 0; j < 8; j++) {
+                output[8*i + j] = addedWord[j];
+            }
+        }
+
+        return output;
+
     }
+
+    private byte[] compressionFunction(byte[] messageBlock, byte[] state) {
+
+        byte[][] messageSchedule = generateMessageSchedule(messageBlock);
+        byte[] currentState = state;
+
+        for (int i = 0; i < 80; i++) {
+            currentState = performRound(messageSchedule[i], roundConst[i], state); // The other input is the internal state which is held as a class-wide variable
+        }
+
+        return currentState;
+
+    }
+
+    private byte[] performRound(byte[] messageChunk, byte[] roundConst, byte[] state) {
+        byte[] outputState = new byte[8];
+
+        outputState[0] = findA(state);
+
+        outputState[1] = state[0];
+        outputState[2] = state[1];
+        outputState[3] = state[2];
+
+        outputState[4] = findE(state);
+
+        outputState[5] = state[4];
+        outputState[6] = state[5];
+        outputState[7] = state[6];
+    }
+
+
 
     private void generatePaddedMessage(String message) {
 

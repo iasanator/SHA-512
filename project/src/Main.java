@@ -12,12 +12,9 @@ public class Main {
         Hasher hasher = new Hasher();
 
         String input = inputReader.getInput();
-        String output = hasher.hash("abc");
+        String output = hasher.hash(input);
 
-
-        //System.out.println(Byte.valueOf("00001000"));
-
-        //System.out.println(output);
+        System.out.println(output);
 
 
         /*
